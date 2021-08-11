@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 const userAuthController = require('../../controller').userAuth;
 const userProfileController = require('../../controller').userProfile;
+const userPostController = require('../../controller').userPost;
 const userValidationSchema = require('../../validation').authSchema;
 const profileValidationSchema = require('../../validation').userSchema;
+const postValidationSchema = require('../../validation').postSchema;
 const userAuthenticated = require('../../services/middleware/userAuthenticate');
 const validationMiddleware = require('../../utils/validationMiddleware');
 
-// Unauthorized Routes
+// Unauthorized Routes 
 router.post(
     '/user/login',
     validationMiddleware(userValidationSchema.login, 'body'),
@@ -29,6 +31,7 @@ router.get(
     userAuthController.authUser
 )
 
+// User Profile Routes
 router.get(
     '/user/profile/allProfile',
     userProfileController.allProfile
@@ -75,6 +78,49 @@ router.delete(
 router.get(
     '/user/profile/github/:username',
     userProfileController.userGitRepos
+);
+
+// User Post Routes
+router.post(
+    '/user/post',userAuthenticated,
+    validationMiddleware(postValidationSchema.post, 'body'),
+    userPostController.addPost
+);
+
+router.get(
+    '/user/post',userAuthenticated,
+    userPostController.allPost
+);
+
+router.get(
+    '/user/post/:postId',userAuthenticated,
+    userPostController.postById
+);
+
+router.delete(
+    '/user/post/:postId',userAuthenticated,
+    userPostController.deletePost
+);
+
+router.put(
+    '/user/post/like/:postId',userAuthenticated,
+    userPostController.likePost
+);
+
+router.put(
+    '/user/post/unlike/:postId',userAuthenticated,
+    userPostController.unlikePost
+);
+
+router.post(
+    '/user/post/comment/:postId',userAuthenticated,
+    validationMiddleware(postValidationSchema.post, 'body'),
+    userPostController.addComment
+);
+
+router.delete(
+    '/user/post/comment/:postId/:commId',userAuthenticated,
+    userPostController.removeComment
 );
 
 module.exports = router;

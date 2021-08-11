@@ -6,4 +6,5 @@
 module.exports = {
 	User: require('./user.service'),
 	Profile: require('./profile.service'),
+	Post: require('./post.service'),
 };
