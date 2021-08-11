@@ -1,3 +1,12 @@
 {
-    "mongoURI":"mongodb+srv://vikash:vsam@@@1999@mern.yycrx.mongodb.net/MERN?retryWrites=true&w=majority"
+    "mongoURI":"mongodb+srv://vikash:vsam@@@1999@mern.yycrx.mongodb.net/MERN?retryWrites=true&w=majority",
+    "jwtsecret":{
+        "secretKey": "vikash@123",
+        "issuer": "vikash",
+        "audience": "friends",
+        "algorithm": "HS256",
+        "expiresIn": "48h"
+    },
+    "githubClientId":"82928fd5d06fc8968462",
+    "githubSecret":"5b4798f53b719badf184882d2b129702c08424cf"
 }

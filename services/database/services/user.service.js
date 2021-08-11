@@ -38,7 +38,7 @@ class User {
         return this._userController.updateMany(query, { $set: updatedObj }, option);
     }
     deleteUserById(userId) {
-        return this._userController.findByIdAndRemove(userId);
+        return this._userController.findByIdAndRemove({_id:userId});
     }
 }
 module.exports = new User();
