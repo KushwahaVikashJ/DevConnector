@@ -50,18 +50,24 @@ function FacebookCircularProgress(props) {
   );
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     position: 'absolute',
     height: '100px',
     width: '100px',
-    top: '50%',
+    top: '55%',
     left: '50%',
-    marginLeft: '-50px',
+    marginLeft: '-55px',
     marginTop: '-50px',
-    backgroundSize: '100%'
+    backgroundSize: '100%',
+    [theme.breakpoints.down('xs')]: {
+      top: '57%',
+      left: '58%',
+      marginLeft: '-58px',
+      marginTop: '-57px',
+    }
   },
-});
+}));
 
 export default function CustomizedProgressBars() {
   const classes = useStyles();
