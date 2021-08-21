@@ -73,7 +73,7 @@ module.exports = {
 			let isPasswordMatch = await _comparePassword(reqPassword,userPassword);
 			//if password does not match, return error
 			if(!isPasswordMatch) {
-				responseData.msg = 'incorrect password';
+				responseData.msg = 'Incorrect password';
 				return responseHelper.error(res,responseData);
 			}
 			//patch token data obj
@@ -90,7 +90,7 @@ module.exports = {
 		}
 		catch(error) {
 			// log.error('failed to get user signup with error::',error);
-			responseData.msg = 'failed to get user login';
+			responseData.msg = 'Failed to get user login';
 			return responseHelper.error(res,responseData);
 		}
 	},
@@ -134,13 +134,13 @@ module.exports = {
 				};
 				let jwtToken = await _generateUserToken(tokenData)
 
-				responseData.data = {token:jwtToken, userData:newUser}
-				responseData.msg = 'your account has been created successfully!';
+				responseData.data = {token:jwtToken, userId:newUser._id,name:newUser.name,email:newUser.email,avatar:newUser.avatar}
+				responseData.msg = 'Your account has been created successfully!';
 				return responseHelper.success(res,responseData);
 			}
 		}
 		catch(error) {
-			responseData.msg = 'failed to create user';
+			responseData.msg = 'Failed to create user';
 			return responseHelper.error(res,responseData);
 		}
 	},
@@ -155,23 +155,23 @@ module.exports = {
 		let responseData = {};
 		try {
 			//set the projection to fetch the limited fields
-			let projection = {};
+			let projection = {password:0};
 			//check if user id is present in the database, then only process the request
 			let userData = await authDbHandler.getUserDetailsById(userId, projection);
     
 			//if no user found, return error
 			if (!userData) {
-				responseData.msg = 'no user profile found';
+				responseData.msg = 'No user profile found';
 				return responseHelper.error(res, responseData);
 			}
 			// log.info('User profile found', userData);
 			//update the response Data
-			responseData.msg = 'user profile fetched successfully';
-			responseData.data = { userData: userData };
+			responseData.msg = 'User profile fetched successfully';
+			responseData.data = userData;
 			return responseHelper.success(res, responseData);
 		} catch (error) {
 			// log.error('failed to get user profile with error::', error);
-			responseData.msg = 'failed to get user profile';
+			responseData.msg = 'Failed to get user profile';
 			return responseHelper.error(res, responseData);
 		}
 	},

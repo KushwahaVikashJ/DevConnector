@@ -3,34 +3,34 @@ const Joi = require('joi');
 module.exports = {
     profile: Joi.object().keys({
 		status: Joi.string().required().label('status'),
-		company: Joi.string().label('company'),
-		website: Joi.string().label('website'),
-		location: Joi.string().label('location'),
-		bio: Joi.string().label('bio'),
+		company: Joi.string().allow('').label('company'),
+		website: Joi.string().allow('').label('website'),
+		location: Joi.string().allow('').label('location'),
+		bio: Joi.string().allow('').label('bio'),
 		skills: Joi.string().required().label('skills'),
-		githubusername: Joi.string().label('githubusername'),
-		youtube: Joi.string().label('youtube'),
-		facebook: Joi.string().label('facebook'),
-		twitter: Joi.string().label('twitter'),
-		instagram: Joi.string().label('instagram'),
-		linkedin: Joi.string().label('linkedin')
+		githubusername: Joi.string().allow('').label('githubusername'),
+		youtube: Joi.string().allow('').label('youtube'),
+		facebook: Joi.string().allow('').label('facebook'),
+		twitter: Joi.string().allow('').label('twitter'),
+		instagram: Joi.string().allow('').label('instagram'),
+		linkedin: Joi.string().allow('').label('linkedin')
 	}),
 	experience: Joi.object().keys({
 		title: Joi.string().required().label('title'),
 		company: Joi.string().required().label('company'),
 		location: Joi.string().label('location'),
-		from: Joi.string().required().label('from'),
-		to: Joi.string().label('to'),
-		current: Joi.boolean().label('current'),
-		description: Joi.string().label('description')
+		from: Joi.date().required().label('from'),
+		to: Joi.date().allow('').label('to'),
+		current: Joi.boolean().allow('').label('current'),
+		description: Joi.string().allow('').label('description')
 	}),
 	education: Joi.object().keys({
 		school: Joi.string().required().label('title'),
 		degree: Joi.string().required().label('company'),
 		fieldofstudy: Joi.string().required().label('location'),
-		from: Joi.string().required().label('from'),
-		to: Joi.string().label('to'),
-		current: Joi.boolean().label('current'),
-		description: Joi.string().label('description')
+		from: Joi.date().required().label('from'),
+		to: Joi.date().allow('').label('to'),
+		current: Joi.boolean().allow('').label('current'),
+		description: Joi.string().allow('').label('description')
 	}),
 };

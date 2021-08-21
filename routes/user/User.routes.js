@@ -32,6 +32,12 @@ router.get(
 )
 
 // User Profile Routes
+
+router.get(
+    '/user/profile',userAuthenticated,
+    userProfileController.profile
+)
+
 router.get(
     '/user/profile/allProfile',
     userProfileController.allProfile
@@ -39,7 +45,7 @@ router.get(
 
 router.get(
     '/user/profile/:user_id',
-    userProfileController.profile
+    userProfileController.profileById
 )
 
 router.post(

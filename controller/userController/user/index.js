@@ -64,8 +64,8 @@ module.exports = {
 					userId,
 					profileFields
 				);
-				responseData.data = {userData:updateUser}
-				responseData.msg = 'user profile updated successfully';
+				responseData.data = updateUser
+				responseData.msg = 'User profile updated successfully';
 				return responseHelper.success(res, responseData);
 			} else {
 				
@@ -73,22 +73,53 @@ module.exports = {
 					profileFields
 				);
 				// log.info('failed to update use profile', updatedUser);
-				responseData.data = {userData:updateUser}
-				responseData.msg = 'new user profile created successfully';
+				responseData.data = updateUser
+				responseData.msg = 'New user profile created successfully';
 				return responseHelper.success(res, responseData);
 				
 			}
 		} catch (error) {
 			// log.error('failed to updated user profile with error::', error);
-			responseData.msg = 'failed to update user profile';
+			responseData.msg = 'Failed to update user profile';
 			return responseHelper.error(res, responseData);
 		}
 	}, 
 
+	/**
+	* Method to get user profile 
+	*/
+	profile: async (req, res) => {
+		let user = req.user;
+		// log.info('Recieved fetching user profile:', user);
+		let userId = user;
+		let responseData = {};
+		try {
+			//set the projection to fetch the limited fields
+			let projection = {password:0};
+			//check if user id is present in the database, then only process the request
+			let userData = await userDbHandler.getProfileDetailsById(userId, projection);
+    
+			//if no user found, return error
+			if (!userData) {
+				responseData.msg = 'No user profile found';
+				return responseHelper.error(res, responseData);
+			}
+			// log.info('User profile found', userData);
+			//update the response Data
+			responseData.msg = 'User profile fetched successfully';
+			responseData.data = userData;
+			return responseHelper.success(res, responseData);
+		} catch (error) {
+			// log.error('failed to get user profile with error::', error);
+			responseData.msg = 'Failed to get user profile';
+			return responseHelper.error(res, responseData);
+		}
+	},
+
     /**
 	* Method to get user profile by userId
 	*/
-	profile: async (req, res) => {
+	profileById: async (req, res) => {
 		let user = req.params.user_id;
 		// log.info('Recieved fetching user profile:', user);
 		let userId = user;
@@ -101,17 +132,17 @@ module.exports = {
     
 			//if no user found, return error
 			if (!userData) {
-				responseData.msg = 'no user profile found';
+				responseData.msg = 'No user profile found';
 				return responseHelper.error(res, responseData);
 			}
 			// log.info('User profile found', userData);
 			//update the response Data
-			responseData.msg = 'user profile fetched successfully';
-			responseData.data = { userData: userData };
+			responseData.msg = 'User profile fetched successfully';
+			responseData.data = userData;
 			return responseHelper.success(res, responseData);
 		} catch (error) {
 			// log.error('failed to get user profile with error::', error);
-			responseData.msg = 'failed to get user profile';
+			responseData.msg = 'Failed to get user profile';
 			return responseHelper.error(res, responseData);
 		}
 	},
@@ -133,18 +164,18 @@ module.exports = {
     
 			//if no user found, return error
 			if (!userData) {
-				responseData.msg = 'no user profile found';
+				responseData.msg = 'No user profile found';
 				return responseHelper.error(res, responseData);
 			}
 			// log.info('User profile found', userData);
 			//update the response Data
-			responseData.msg = 'users profile fetched successfully';
-			responseData.data = { userData: userData };
+			responseData.msg = 'Users profile fetched successfully';
+			responseData.data = userData;
 			return responseHelper.success(res, responseData);
 		} catch (error) {
 			console.log(error)
 			// log.error('failed to get user profile with error::', error);
-			responseData.msg = 'failed to get users profile';
+			responseData.msg = 'Failed to get users profile';
 			return responseHelper.error(res, responseData);
 		}
 	},
@@ -165,19 +196,19 @@ module.exports = {
     
 			//if no user found, return error
 			if (!userData) {
-				responseData.msg = 'no user profile found';
+				responseData.msg = 'No user profile found';
 				return responseHelper.error(res, responseData);
 			}
 			//delete profile
 			await userDbHandler.deleteProfileById(userId);
 			//delete user
 			await authDbHandler.deleteUserById(userId);
-			responseData.msg = 'user deleted successfully';
+			responseData.msg = 'User deleted successfully';
 			return responseHelper.success(res, responseData);
 		} catch (error) {
 			console.log(error)
 			// log.error('failed to get user profile with error::', error);
-			responseData.msg = 'failed to delete user';
+			responseData.msg = 'Failed to delete user';
 			return responseHelper.error(res, responseData);
 		}
 	},
@@ -221,17 +252,17 @@ module.exports = {
 			if (updateUser) {
 				updateUser.experience.unshift(newExp)
 				updateUser = await updateUser.save()
-				responseData.data = {userData:updateUser}
-				responseData.msg = 'user experience updated successfully';
+				responseData.data = updateUser
+				responseData.msg = 'User experience updated successfully';
 				return responseHelper.success(res, responseData);
 			} else {
-				responseData.msg = 'failed to update user experience';
+				responseData.msg = 'Failed to update user experience';
 				return responseHelper.error(res, responseData);			
 			}
 		} catch (error) {
 			console.log(error)
 			// log.error('failed to updated user profile with error::', error);
-			responseData.msg = 'failed to update user experience';
+			responseData.msg = 'Failed to update user experience';
 			return responseHelper.error(res, responseData);
 		}
 	}, 
@@ -254,17 +285,17 @@ module.exports = {
 			if (updateUser) {
 				updateUser.experience = updateUser.experience.filter(exp => exp._id.toString() !== expId);
 				await updateUser.save();
-				responseData.data = {userData:updateUser}
-				responseData.msg = 'user experience deleted successfully';
+				responseData.data = updateUser
+				responseData.msg = 'User experience deleted successfully';
 				return responseHelper.success(res, responseData);
 			} else {
-				responseData.msg = 'failed to delete user experience';
+				responseData.msg = 'Failed to delete user experience';
 				return responseHelper.error(res, responseData);			
 			}
 		} catch (error) {
 			console.log(error)
 			// log.error('failed to updated user profile with error::', error);
-			responseData.msg = 'failed to delete user experience';
+			responseData.msg = 'Failed to delete user experience';
 			return responseHelper.error(res, responseData);
 		}
 	}, 
@@ -308,17 +339,17 @@ module.exports = {
 			if (updateUser) {
 				updateUser.education.unshift(newEdu)
 				updateUser = await updateUser.save()
-				responseData.data = {userData:updateUser}
-				responseData.msg = 'user education updated successfully';
+				responseData.data = updateUser
+				responseData.msg = 'User education updated successfully';
 				return responseHelper.success(res, responseData);
 			} else {
-				responseData.msg = 'failed to update user education';
+				responseData.msg = 'Failed to update user education';
 				return responseHelper.error(res, responseData);			
 			}
 		} catch (error) {
 			console.log(error)
 			// log.error('failed to updated user profile with error::', error);
-			responseData.msg = 'failed to update user education';
+			responseData.msg = 'Failed to update user education';
 			return responseHelper.error(res, responseData);
 		}
 	}, 
@@ -341,17 +372,17 @@ module.exports = {
 			if (updateUser) {
 				updateUser.education = updateUser.education.filter(edu => edu._id.toString() !== eduId);
 				await updateUser.save();
-				responseData.data = {userData:updateUser}
-				responseData.msg = 'user education deleted successfully';
+				responseData.data = updateUser
+				responseData.msg = 'User education deleted successfully';
 				return responseHelper.success(res, responseData);
 			} else {
-				responseData.msg = 'failed to delete user education';
+				responseData.msg = 'Failed to delete user education';
 				return responseHelper.error(res, responseData);			
 			}
 		} catch (error) {
 			console.log(error)
 			// log.error('failed to updated user profile with error::', error);
-			responseData.msg = 'failed to delete user education';
+			responseData.msg = 'Failed to delete user education';
 			return responseHelper.error(res, responseData);
 		}
 	},
@@ -367,7 +398,7 @@ module.exports = {
 			const options = {
 				uri:`https://api.github.com/users/${
 				  username
-				}/repos?per_page=1&sort=created:asc&client_id=${config.githubClientId
+				}/repos?per_page=10&sort=created:asc&client_id=${config.githubClientId
 				}&client_secret=${config.githubSecret}`,
 				method: 'GET',
 				headers: { 'user-agent': 'node.js' }
@@ -381,7 +412,7 @@ module.exports = {
 					return responseHelper.error(res, responseData);
 				}
 				responseData.msg = 'Github profile fetched successfully';
-				responseData.data = { userData: JSON.parse(body) };
+				responseData.data = JSON.parse(body);
 				return responseHelper.success(res, responseData);
 			})
 		} catch (error) {

@@ -23,7 +23,7 @@ module.exports = {
 			let User = await authDbHandler.getUserDetailsById(userId);		
 			//return error if user data found is null
 			if (!User) {
-				responseData.msg = 'user not found';
+				responseData.msg = 'User not found';
 				return responseHelper.error(res, responseData);
 			} else {				
 				const newPost = {
@@ -34,12 +34,12 @@ module.exports = {
 				}
  
 				const post = await postDbHandler.createPost(newPost);
-				responseData.data = {postData:post}
-				responseData.msg = 'new post created successfully';
+				responseData.data = post
+				responseData.msg = 'New post created successfully';
 				return responseHelper.success(res, responseData);				
 			}
 		} catch (error) {
-			responseData.msg = 'failed to create new post';
+			responseData.msg = 'Failed to create new post';
 			return responseHelper.error(res, responseData);
 		}
 	}, 
@@ -58,16 +58,16 @@ module.exports = {
 			let postData = await postDbHandler.getPostDetailsById(postId, projection);
     
 			if (!postData) {
-				responseData.msg = 'no user post found';
+				responseData.msg = 'No user post found';
 				return responseHelper.error(res, responseData);
 			}
 			// log.info('User profile found', userData);
-			responseData.msg = 'user post fetched successfully';
-			responseData.data = { postData: postData };
+			responseData.msg = 'User post fetched successfully';
+			responseData.data = postData;
 			return responseHelper.success(res, responseData);
 		} catch (error) {
 			// log.error('failed to get user profile with error::', error);
-			responseData.msg = 'failed to get user post';
+			responseData.msg = 'Failed to get user post';
 			return responseHelper.error(res, responseData);
 		}
 	},
@@ -89,18 +89,18 @@ module.exports = {
     
 			//if no user found, return error
 			if (!postData) {
-				responseData.msg = 'no user post found';
+				responseData.msg = 'No user post found';
 				return responseHelper.error(res, responseData);
 			}
 			// log.info('User profile found', userData);
 			//update the response Data
-			responseData.msg = 'users posts fetched successfully';
-			responseData.data = { postData: postData };
+			responseData.msg = 'Users posts fetched successfully';
+			responseData.data = postData;
 			return responseHelper.success(res, responseData);
 		} catch (error) {
 			console.log(error)
 			// log.error('failed to get user profile with error::', error);
-			responseData.msg = 'failed to get user posts';
+			responseData.msg = 'Failed to get user posts';
 			return responseHelper.error(res, responseData);
 		}
 	},
@@ -120,22 +120,22 @@ module.exports = {
 			//check if user id is present in the database, then only process the request
 			let postData = await postDbHandler.getPostDetailsById(postId, projection);
             if(!postData){
-				responseData.msg = 'post not found';
+				responseData.msg = 'Post not found';
 				return responseHelper.error(res, responseData);				
 			}
 
 			if (postData.user.toString()!==userId) {
-				responseData.msg = 'not authorized';
+				responseData.msg = 'You are not authorized to delete this post';
 				return responseHelper.error(res, responseData);
 			}
 			
 			postData.remove();
-			responseData.msg = 'post deleted successfully';
+			responseData.msg = 'Post deleted successfully';
 			return responseHelper.success(res, responseData);
 		} catch (error) {
 			console.log(error)
 			// log.error('failed to get user profile with error::', error);
-			responseData.msg = 'failed to delete post';
+			responseData.msg = 'Failed to delete post';
 			return responseHelper.error(res, responseData);
 		}
 	},
@@ -154,24 +154,24 @@ module.exports = {
 			//check if user ID is present in the database, then only process the update profile request
 			let post = await postDbHandler.getPostDetailsById(postId);
 			if(!post){
-				responseData.msg = 'post not found';
+				responseData.msg = 'Post not found';
 				return responseHelper.error(res, responseData);	
 			}
 
 			if(post.likes.filter(like=>like?.user?.toString() === userId).length>0){
-				responseData.msg = 'you like the post already';
+				responseData.msg = 'You like the post already';
 				return responseHelper.error(res, responseData);	
 			}
 			else{
 				post.likes.unshift({user:userId})
 				const updatePost = await post.save()
-				responseData.data = {postLikes:updatePost.likes}
-				responseData.msg = 'like added successfully';
+				responseData.data = updatePost.likes
+				responseData.msg = 'Like added successfully';
 				return responseHelper.success(res, responseData);
 			}
 		} catch (error) {
 			// log.error('failed to updated user profile with error::', error);
-			responseData.msg = 'failed to llike the post';
+			responseData.msg = 'Failed to like the post';
 			return responseHelper.error(res, responseData);
 		}
 	}, 
@@ -190,26 +190,26 @@ module.exports = {
 			//check if user ID is present in the database, then only process the update profile request
 			let post = await postDbHandler.getPostDetailsById(postId);
 			if(!post){
-				responseData.msg = 'post not found';
+				responseData.msg = 'Post not found';
 				return responseHelper.error(res, responseData);	
 			}
 
 			if(post.likes.filter(like=>like?.user?.toString() === userId).length===0){
-				responseData.msg = 'post has not been liked yet';
+				responseData.msg = 'Post has not been liked yet by you';
 				return responseHelper.error(res, responseData);	
 			}
 			else{
 				const removeIndex = post.likes.map(like=>like.user.toString()).indexOf(userId);
 				post.likes.splice(removeIndex,1);
 				await post.save();
-				responseData.data = {postLikes:post.likes}
-				responseData.msg = 'post unliked successfully';
+				responseData.data = post.likes
+				responseData.msg = 'Post unliked successfully';
 				return responseHelper.success(res, responseData);
 			}
 		} catch (error) {
 			console.log(error)
 			// log.error('failed to updated user profile with error::', error);
-			responseData.msg = 'failed to unlike post';
+			responseData.msg = 'Failed to unlike post';
 			return responseHelper.error(res, responseData);
 		}
 	},
@@ -229,13 +229,13 @@ module.exports = {
 			//check if user ID is present in the database
 			let User = await authDbHandler.getUserDetailsById(userId);		
 			if (!User) {
-				responseData.msg = 'user not found';
+				responseData.msg = 'User not found';
 				return responseHelper.error(res, responseData);
 			} 
 
 			let post = await postDbHandler.getPostDetailsById(postId);
 			if(!post){
-				responseData.msg = 'post not found';
+				responseData.msg = 'Post not found';
 				return responseHelper.error(res, responseData);	
 			}
 			
@@ -248,13 +248,13 @@ module.exports = {
 
 			post.comments.unshift(newComment);
 			await post.save()
-			responseData.data = {postComments:post.comments}
-			responseData.msg = 'comment added successfully';
+			responseData.data = post.comments
+			responseData.msg = 'Comment added successfully';
 			return responseHelper.success(res, responseData);				
 		
 		} catch (error) {
 			console.log(error)
-			responseData.msg = 'failed to add comment';
+			responseData.msg = 'Failed to add comment';
 			return responseHelper.error(res, responseData);
 		}
 	}, 
@@ -274,30 +274,30 @@ module.exports = {
 			//check if user ID is present in the database, then only process the update profile request
 			let post = await postDbHandler.getPostDetailsById(postId);
 			if(!post){
-				responseData.msg = 'post not found';
+				responseData.msg = 'Post not found';
 				return responseHelper.error(res, responseData);	
 			}
 
 			let comment = post.comments.find(comm=>comm._id.toString()===commId);
 			if(!comment){
-				responseData.msg = 'comment not found';
+				responseData.msg = 'Comment not found';
 				return responseHelper.error(res, responseData);	
 			}
 
 			if(comment.user.toString()!==userId){
-				responseData.msg = 'not authorized';
+				responseData.msg = 'Not authorized';
 				return responseHelper.error(res, responseData);	
 			}
 
 			const removeIndex = post.comments.map(comm=>comm.user.toString()).indexOf(userId);
 			post.comments.splice(removeIndex,1);
 			await post.save();
-			responseData.data = {postComments:post.comments}
-			responseData.msg = 'comment removed successfully';
+			responseData.data = post.comments
+			responseData.msg = 'Comment removed successfully';
 			return responseHelper.success(res, responseData);
 		} catch (error) {
 			// log.error('failed to updated user profile with error::', error);
-			responseData.msg = 'failed to remove comment';
+			responseData.msg = 'Failed to remove comment';
 			return responseHelper.error(res, responseData);
 		}
 	},
